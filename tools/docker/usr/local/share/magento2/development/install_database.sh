@@ -1,5 +1,7 @@
 #!/bin/bash
 
+env
+
 if [ "$FORCE_DATABASE_DROP" == 'true' ]; then
   echo 'Dropping the Magento DB if exists'
   mysql -h"$DATABASE_HOST" -uroot -p"$DATABASE_ROOT_PASSWORD" -e "DROP DATABASE IF EXISTS $DATABASE_NAME" || exit 1
