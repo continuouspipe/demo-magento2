@@ -15,9 +15,6 @@ tasks:
                         - name: MAGENTO_PASSWORD
                           value: ${MAGENTO_PASSWORD}
 
-        filter:
-            expression: '"Trigger CP" in pull_request.labels'
-
     infrastructure:
         deploy:
             services:
@@ -77,9 +74,6 @@ tasks:
                             limits:
                                 cpu: 250m
                                 memory: 250Mi
-
-        filter:
-            expression: '"Trigger CP" in pull_request.labels'
 
     reserve_ip:
         deploy:
@@ -235,6 +229,3 @@ tasks:
                             period_seconds: 300
                             success_threshold: 1
                             failure_threshold: 10
-
-        filter:
-            expression: '"Trigger CP" in pull_request.labels'
