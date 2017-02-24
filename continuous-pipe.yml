@@ -128,9 +128,6 @@ tasks:
             services:
                 proxy:
                     specification:
-                        source:
-                            image: quay.io/continuouspipe/nginx-reverse-proxy
-                            tag: stable
                         accessibility:
                             from_external: true
                         ports:

@@ -3,6 +3,15 @@ version: '2'
 services:
   proxy:
     image: quay.io/continuouspipe/nginx-reverse-proxy:stable
+    environment:
+      PROXY_LOCATIONS: >
+        [
+          {
+            "location": "/",
+            "backend": "http://varnish",
+            "preserve_host": true
+          }
+        ]
 
   varnish:
     image: quay.io/continuouspipe/magento2-varnish4:stable
@@ -37,7 +46,7 @@ services:
       DATABASE_USER: magento2
       DATABASE_PASSWORD: magento2
       DATABASE_ROOT_PASSWORD: magentoroot
-      MAGENTO_CRYPT_KEY: XXXXXX
+      MAGENTO_CRYPT_KEY: "/x0NmcKk7BqKGX1h9JdHb7FcCaP74+bt"
       MAGENTO_MODE: developer
       PRODUCTION_ENVIRONMENT: 'false'
 
