@@ -4,14 +4,7 @@ services:
   proxy:
     image: quay.io/continuouspipe/nginx-reverse-proxy:stable
     environment:
-      PROXY_LOCATIONS: >
-        [
-          {
-            "location": "/",
-            "backend": "http://varnish",
-            "preserve_host": true
-          }
-        ]
+      PROXY_LOCATIONS: '[{"location": "/", "backend": "http://varnish", "preserve_host": true}]'
 
   varnish:
     image: quay.io/continuouspipe/magento2-varnish4:stable
