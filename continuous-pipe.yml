@@ -137,11 +137,11 @@ tasks:
                         resources:
                             requests:
                                 cpu: 50m
-                                memory: 500Mi
+                                memory: 50Mi
 
                             limits:
                                 cpu: 1
-                                memory: 2G
+                                memory: 200Mi
 
                         environment_variables:
                             - name: AUTH_HTTP_ENABLED
@@ -181,11 +181,11 @@ tasks:
                         resources:
                             requests:
                                 cpu: 50m
-                                memory: 500Mi
+                                memory: 50Mi
 
                             limits:
                                 cpu: 1
-                                memory: 2G
+                                memory: 1G # Varnish is configured with malloc,1g
 
                         ports:
                             - 80
@@ -201,7 +201,7 @@ tasks:
                         resources:
                             requests:
                                 cpu: 50m
-                                memory: 500Mi
+                                memory: 50Mi
 
                             limits:
                                 cpu: 1
