@@ -95,7 +95,7 @@ tasks:
                             - 80
                             - 443
         filter:
-            expression: 'tasks.infrastructure.services.database.created'
+            expression: 'tasks.storage.services.database.created'
 
 
     setup:
@@ -127,7 +127,7 @@ tasks:
                   value: false
 
         filter:
-            expression: 'tasks.infrastructure.services.database.created'
+            expression: 'tasks.storage.services.database.created'
 
     deployment:
         deploy:
