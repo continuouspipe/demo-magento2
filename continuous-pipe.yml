@@ -259,7 +259,7 @@ pipelines:
         - deployment
       variables:
           - name: MAGENTO_MODE
-            value: development
+            value: developer
           - name: DEVELOPMENT_MODE
             value: 0
           - name: PRODUCTION_ENVIRONMENT
