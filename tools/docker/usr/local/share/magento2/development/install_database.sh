@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /usr/local/share/bootstrap/common_functions.sh
+
 if [ "$FORCE_DATABASE_DROP" == 'true' ]; then
   echo 'Dropping the Magento DB if exists'
   mysql -h"$DATABASE_HOST" -uroot -p"$DATABASE_ROOT_PASSWORD" -e "DROP DATABASE IF EXISTS $DATABASE_NAME" || exit 1
@@ -17,19 +19,19 @@ if [ "$DATABASE_EXISTS" -ne 0 ]; then
   echo 'Install Magento 2 Database'
 
   chmod +x bin/magento
-  bin/magento setup:install --base-url=http://$PUBLIC_ADDRESS/ \
-  --db-host=$DATABASE_HOST \
-  --db-name=$DATABASE_NAME \
-  --db-user=$DATABASE_USER \
-  --db-password=$DATABASE_PASSWORD \
-  --admin-firstname=Admin \
-  --admin-lastname=Demo \
-  --admin-email=admin@admin.com \
-  --admin-user=admin \
-  --admin-password=admin123 \
-  --language=en_GB \
-  --currency=GBP \
-  --timezone=Europe/London \
-  --use-rewrites=1 \
-  --session-save=db
+  as_code_owner "bin/magento setup:install --base-url="$PUBLIC_ADDRESS" \
+    --db-host="$DATABASE_HOST" \
+    --db-name="$DATABASE_NAME" \
+    --db-user="$DATABASE_USER" \
+    --db-password="$DATABASE_PASSWORD" \
+    --admin-firstname=Admin \
+    --admin-lastname=Demo \
+    --admin-email=admin@admin.com \
+    --admin-user=admin \
+    --admin-password=admin123 \
+    --language=en_GB \
+    --currency=GBP \
+    --timezone=Europe/London \
+    --use-rewrites=1 \
+    --session-save=db"
 fi

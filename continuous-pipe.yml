@@ -3,6 +3,12 @@ defaults:
     environment:
         name: '"magento2-demo-" ~ code_reference.branch'
     
+variables:
+    - name: MAGENTO_MODE
+      value: production
+    - name: PRODUCTION_ENVIRONMENT
+      value: 'false'
+
 tasks:
     images:
         build:
@@ -15,7 +21,7 @@ tasks:
                         - name: MAGENTO_PASSWORD
                           value: ${MAGENTO_PASSWORD}
 
-    infrastructure:
+    storage:
         deploy:
             services:
                 database:
@@ -70,7 +76,7 @@ tasks:
                         resources:
                             requests:
                                 cpu: 50m
-                                memory: 100Mi
+                                memory: 50Mi
                             limits:
                                 cpu: 250m
                                 memory: 250Mi
@@ -89,10 +95,10 @@ tasks:
                             - 80
                             - 443
         filter:
-            expression: 'tasks.infrastructure.services.database.created'
+            expression: 'tasks.storage.services.database.created'
 
 
-    initialization:
+    setup:
         run:
             image:
                 from_service: web
@@ -121,16 +127,13 @@ tasks:
                   value: false
 
         filter:
-            expression: 'tasks.infrastructure.services.database.created'
+            expression: 'tasks.storage.services.database.created'
 
-    application:
+    deployment:
         deploy:
             services:
                 proxy:
                     specification:
-                        source:
-                            image: quay.io/continuouspipe/nginx-reverse-proxy
-                            tag: stable
                         accessibility:
                             from_external: true
                         ports:
@@ -140,11 +143,11 @@ tasks:
                         resources:
                             requests:
                                 cpu: 50m
-                                memory: 500Mi
+                                memory: 50Mi
 
                             limits:
                                 cpu: 1
-                                memory: 2G
+                                memory: 200Mi
 
                         environment_variables:
                             - name: AUTH_HTTP_ENABLED
@@ -184,11 +187,11 @@ tasks:
                         resources:
                             requests:
                                 cpu: 50m
-                                memory: 500Mi
+                                memory: 50Mi
 
                             limits:
                                 cpu: 1
-                                memory: 2G
+                                memory: 1G # Varnish is configured with malloc,1g
 
                         ports:
                             - 80
@@ -204,7 +207,7 @@ tasks:
                         resources:
                             requests:
                                 cpu: 50m
-                                memory: 500Mi
+                                memory: 50Mi
 
                             limits:
                                 cpu: 1
@@ -229,3 +232,36 @@ tasks:
                             period_seconds: 300
                             success_threshold: 1
                             failure_threshold: 10
+
+pipelines:
+    - name: Production
+      tasks:
+        - images
+        - storage
+        - reserve_ip
+        - setup
+        - deployment
+      condition: 'code_reference.branch in ["master", "develop"]'
+    - name: Features
+      tasks:
+        - images
+        - storage
+        - reserve_ip
+        - setup
+        - deployment
+      condition: 'not(code_reference.branch in ["master", "develop"]) and not(code_reference.branch matches "/^cpdev/")'
+    - name: Remote
+      tasks:
+        - images
+        - storage
+        - reserve_ip
+        - setup
+        - deployment
+      variables:
+          - name: MAGENTO_MODE
+            value: developer
+          - name: DEVELOPMENT_MODE
+            value: 0
+          - name: PRODUCTION_ENVIRONMENT
+            value: 'false'
+      condition: 'code_reference.branch matches "/^cpdev/"'
