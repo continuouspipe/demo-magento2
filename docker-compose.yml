@@ -6,6 +6,9 @@ services:
     environment:
       PROXY_LOCATIONS: '[{"location": "/", "backend": "http://varnish", "preserve_host": true}]'
       DNSDOCK_ALIAS: demo-magento2.docker
+    ports:
+      - "80:80"
+      - "443:443"
 
   varnish:
     image: quay.io/continuouspipe/magento2-varnish4:stable
@@ -22,9 +25,6 @@ services:
         MAGENTO_PASSWORD:
     volumes:
       - .:/app
-    ports:
-      - "80:80"
-      - "443:443"
     environment: &WEB_ENV_VARS
       GITHUB_TOKEN:
       MAGENTO_USERNAME:
